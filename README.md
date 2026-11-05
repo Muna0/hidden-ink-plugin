@@ -42,4 +42,4 @@ The guard covers the normal ways Claude Code opens these files. It is a safety n
 
 Hidden Ink reports hidden content found by automated analysis. It is not legal advice.
 
-Copyright Muna Omar. All rights reserved. The license for public release has not been chosen yet.
+Copyright Muna Omar. Licensed under the PolyForm Shield License 1.0.0 (see LICENSE): you may use Hidden Ink freely, but not to build a product that competes with it.

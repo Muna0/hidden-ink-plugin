@@ -18,5 +18,24 @@ if [ -z "$uv_bin" ]; then
   exit 0
 fi
 
+# First use: uv downloads Python and the libraries (about 2 minutes on a new computer), longer than
+# Claude Code waits for a hook. Set up in the background and block documents until it is done, so no
+# file is read unchecked.
+ready="$root/.venv/.hiddenink-ready"
+lock="$root/.setup-lock"
+if [ ! -f "$ready" ]; then
+  [ -d "$lock" ] && [ -n "$(find "$lock" -maxdepth 0 -mmin +10 2>/dev/null)" ] && rmdir "$lock" 2>/dev/null
+  if mkdir "$lock" 2>/dev/null; then
+    nohup sh -c '"$1" sync --locked --quiet --project "$2" && mkdir -p "${3%/*}" && touch "$3"; rmdir "$4"' sh \
+      "$uv_bin" "$root" "$ready" "$lock" >/dev/null 2>&1 &
+  fi
+  waited=0
+  while [ ! -f "$ready" ] && [ "$waited" -lt "${HIDDENINK_SETUP_WAIT:-20}" ]; do sleep 1; waited=$((waited + 1)); done
+  if [ ! -f "$ready" ]; then
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Hidden Ink is finishing its one-time setup, which takes about 2 minutes the first time. Until then it cannot check this file for hidden text, so it stopped this read. Tell the user, wait a minute, and try again."}}'
+    exit 0
+  fi
+fi
+
 printf '%s' "$input" | "$uv_bin" run --locked --quiet --project "$root" hiddenink guard
 exit 0

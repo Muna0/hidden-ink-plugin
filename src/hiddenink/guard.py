@@ -11,7 +11,7 @@ from .cache import brief_for
 from .errors import HiddenInkError
 from .scan import BIG_FILE_BYTES
 
-GUARD_TIMEOUT = 5.0
+GUARD_TIMEOUT = 15.0  # a scan usually takes about 1 s; the first one on a Mac loads native libraries slowly
 BIG_GUARD_TIMEOUT = 25.0
 HOOK_BUDGET = 22.0  # all files together, leaving room for uv start-up inside the 30 second hook timeout
 MAX_FILES = 5

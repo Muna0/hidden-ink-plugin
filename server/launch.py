@@ -44,7 +44,7 @@ def _engine(args: list[str]) -> list[str]:
     if python:
         return [python, "-m", "hiddenink.cli", *args]
     uv = shutil.which("uv") or str(Path.home() / ".local" / "bin" / "uv")
-    return [uv, "run", "--locked", "--quiet", "--project", str(ROOT), "hiddenink", *args]
+    return [uv, "run", "--locked", "--compile-bytecode", "--quiet", "--project", str(ROOT), "hiddenink", *args]
 
 
 def _result(text: str, error: bool = False) -> dict:

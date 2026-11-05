@@ -26,7 +26,7 @@ lock="$root/.setup-lock"
 if [ ! -f "$ready" ]; then
   [ -d "$lock" ] && [ -n "$(find "$lock" -maxdepth 0 -mmin +10 2>/dev/null)" ] && rmdir "$lock" 2>/dev/null
   if mkdir "$lock" 2>/dev/null; then
-    nohup sh -c '"$1" sync --locked --quiet --project "$2" && mkdir -p "${3%/*}" && touch "$3"; rmdir "$4"' sh \
+    nohup sh -c '"$1" sync --locked --compile-bytecode --quiet --project "$2" && "$1" run --locked --quiet --project "$2" python -c "import hiddenink.scan, hiddenink.checks.docx, hiddenink.checks.pdf, hiddenink.guard" && mkdir -p "${3%/*}" && touch "$3"; rmdir "$4"' sh \
       "$uv_bin" "$root" "$ready" "$lock" >/dev/null 2>&1 &
   fi
   waited=0

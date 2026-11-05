@@ -29,6 +29,9 @@ def main(argv: list[str] | None = None) -> int:
     serve.add_argument("--port", type=int, default=8765)
     sub.add_parser("guard", help="Claude Code hook: read a PreToolUse event on stdin")
     sub.add_parser("mcp", help="Run the Hidden Ink MCP server over stdio")
+    tool = sub.add_parser("tool", help="Run one Claude tool call (used by the plugin's MCP launcher)")
+    tool.add_argument("name", choices=["scan_document", "get_clean_text"])
+    tool.add_argument("path")
     args = parser.parse_args(argv)
 
     if args.command == "serve":
@@ -45,6 +48,20 @@ def main(argv: list[str] | None = None) -> int:
         out = run_hook(sys.stdin.read())
         if out:
             print(out)
+        return 0
+
+    if args.command == "tool":
+        from . import mcp_server
+
+        try:
+            out = getattr(mcp_server, args.name)(args.path)
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        except Exception:  # noqa: BLE001 - the launcher shows the last stderr line to Claude
+            print("Hidden Ink could not check this file.", file=sys.stderr)
+            return 1
+        print(out if isinstance(out, str) else json.dumps(out, ensure_ascii=False))
         return 0
 
     if args.command == "mcp":

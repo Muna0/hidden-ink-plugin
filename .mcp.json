@@ -2,7 +2,13 @@
   "mcpServers": {
     "hidden-ink": {
       "command": "uv",
-      "args": ["run", "--locked", "--quiet", "--project", "${CLAUDE_PLUGIN_ROOT}", "hiddenink", "mcp"]
+      "args": [
+        "run",
+        "--locked",
+        "--quiet",
+        "--script",
+        "${CLAUDE_PLUGIN_ROOT}/server/launch.py"
+      ]
     }
   }
 }

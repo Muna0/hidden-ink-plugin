@@ -31,6 +31,7 @@ Then, in Claude Code:
 
 - **Your documents are never uploaded.** Every scan runs on your computer. Hidden Ink makes no network calls of its own.
 - **One download on first use.** The first time it starts, `uv` downloads Python (if needed) and the libraries listed in `uv.lock` from PyPI, about 100 MB. The versions are pinned by the lock file. After that, nothing is downloaded. Some firm-managed laptops block this; ask IT to allow `uv` and PyPI.
+- **The tools.** A small launcher (`server/launch.py`, Python's standard library only) answers Claude Code right away, then runs the scanner on this computer for each tool call. The first call after installing waits for the one-time download.
 - **The guard.** A Claude Code hook (`hooks/guard.sh`) reads each Read or Bash tool call that mentions a .docx or .pdf file, scans the files it names, and replies to Claude Code. Other tool calls are passed through untouched in a few milliseconds.
 - **A local cache.** Results are kept for 30 days in your user cache folder (`~/Library/Caches/hiddenink` on a Mac), keyed by a fingerprint (SHA-256) of the file, so an unchanged file is not scanned twice. The cache holds findings only, never the document's text.
 - **Safety limits.** Each scan runs in a separate process with a time limit. Files up to 2 GB are accepted; files over 100 MB get more time.

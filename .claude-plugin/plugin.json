@@ -1,0 +1,7 @@
+{
+  "name": "hidden-ink",
+  "version": "0.1.0",
+  "description": "Finds hidden text in Word and PDF files that AI can read but people cannot see, such as white text, hidden Word text, tiny fonts, comments, tracked deletions and invisible characters. Scans run on your computer; documents are never uploaded. Blocks Claude from reading high-risk files and offers the visible text instead. Does not provide legal advice.",
+  "author": { "name": "Muna Omar" },
+  "license": "UNLICENSED"
+}

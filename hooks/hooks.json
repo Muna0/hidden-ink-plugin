@@ -1,0 +1,13 @@
+{
+  "description": "Hidden Ink scans .docx and .pdf files before Claude opens them.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Bash",
+        "hooks": [
+          { "type": "command", "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/guard.sh\"", "timeout": 30 }
+        ]
+      }
+    ]
+  }
+}

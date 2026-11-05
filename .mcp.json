@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "hidden-ink": {
+      "command": "uv",
+      "args": ["run", "--locked", "--quiet", "--project", "${CLAUDE_PLUGIN_ROOT}", "hiddenink", "mcp"]
+    }
+  }
+}

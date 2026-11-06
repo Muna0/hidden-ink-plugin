@@ -9,6 +9,11 @@
       "name": "hidden-ink",
       "source": "./",
       "description": "Find hidden prompt injection in legal Word and PDF files, locally."
+    },
+    {
+      "name": "hidden-ink-check",
+      "source": "./check",
+      "description": "Lighter Hidden Ink: a skill that checks Word and PDF files for hidden text before Claude reads them. No setup, standard-library Python only."
     }
   ]
 }

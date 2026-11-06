@@ -1,0 +1,16 @@
+{
+  "name": "hidden-ink-check",
+  "version": "0.1.0",
+  "description": "Checks Word and PDF files for text an AI can read but people cannot see, such as white text, hidden Word text, tiny fonts, text off the page, comments, tracked deletions and invisible characters, before Claude reads them. Runs a short standard-library Python check on your computer; documents are never uploaded. A lighter version of Hidden Ink. Does not provide legal advice.",
+  "author": {
+    "name": "Muna Omar"
+  },
+  "license": "PolyForm-Shield-1.0.0",
+  "homepage": "https://hiddenink.io",
+  "repository": "https://github.com/Muna0/hidden-ink-plugin",
+  "privacyPolicyUrl": "https://hiddenink.io/privacy/",
+  "supportUrl": "https://hiddenink.io/support/",
+  "termsOfServiceUrl": "https://hiddenink.io/terms/",
+  "documentationUrl": "https://hiddenink.io/support/",
+  "keywords": ["prompt injection", "hidden text", "legal", "docx", "pdf", "security"]
+}

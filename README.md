@@ -75,7 +75,7 @@ For those, run `/hidden-ink:scan <file>` yourself, or scan the file at [hiddenin
 
 ## Privacy
 
-Hidden Ink runs on your computer and makes no network calls; your documents are never sent to Hidden Ink. Scan findings are cached on your computer for up to 30 days. Read the full [privacy policy](https://hiddenink.io/privacy/). Help: [hiddenink.io/support](https://hiddenink.io/support/).
+Hidden Ink runs on your computer and makes no network calls; your documents are never sent to Hidden Ink. Scan findings are cached on your computer for up to 30 days. Read the full [privacy policy](https://hiddenink.io/privacy/) and [terms of service](https://hiddenink.io/terms/). Help: [hiddenink.io/support](https://hiddenink.io/support/).
 
 ## Legal
 

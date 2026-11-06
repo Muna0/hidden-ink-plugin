@@ -10,5 +10,6 @@
   "repository": "https://github.com/Muna0/hidden-ink-plugin",
   "privacyPolicyUrl": "https://hiddenink.io/privacy/",
   "supportUrl": "https://hiddenink.io/support/",
-  "documentationUrl": "https://hiddenink.io/hidden-ink-claude-code-guide.pdf"
+  "documentationUrl": "https://hiddenink.io/hidden-ink-claude-code-guide.pdf",
+  "termsOfServiceUrl": "https://hiddenink.io/terms/"
 }

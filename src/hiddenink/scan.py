@@ -44,11 +44,12 @@ def scan_timeout(size: int, hosted: bool = False) -> float:
 def detect_format(path: Path) -> str:
     with open(path, "rb") as fh:
         head = fh.read(1024)
-    if b"%PDF" in head:
-        return "pdf"
     if head.startswith(OLE_MAGIC):
         raise ScanError("This is a password-protected or an older (.doc/.xls/.ppt) Office file. "
                         "Hidden Ink cannot scan it yet.")
+    # A zip signature at byte 0 wins: a Word file must not be passed off as a PDF by a stray %PDF marker
+    if b"%PDF" in head and not head.startswith(b"PK"):
+        return "pdf"
     if head.startswith(b"PK"):
         try:
             with zipfile.ZipFile(path) as zf:

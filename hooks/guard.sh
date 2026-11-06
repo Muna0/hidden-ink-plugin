@@ -37,5 +37,12 @@ if [ ! -f "$ready" ]; then
   fi
 fi
 
-printf '%s' "$input" | "$uv_bin" run --locked --quiet --project "$root" hiddenink guard
+out=$(printf '%s' "$input" | "$uv_bin" run --locked --quiet --project "$root" hiddenink guard)
+status=$?
+if [ "$status" -ne 0 ]; then
+  # The scanner could not run: let the person decide rather than letting the file through unchecked
+  printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"Hidden Ink could not run its check on this document, so it could not look for hidden text. Allow it only if you trust the file."}}'
+  exit 0
+fi
+[ -n "$out" ] && printf '%s\n' "$out"
 exit 0

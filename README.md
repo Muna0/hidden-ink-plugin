@@ -61,7 +61,17 @@ Drop any Word or PDF file at [hiddenink.io](https://hiddenink.io) to see every h
 - **A local cache.** Results are kept for 30 days in your user cache folder (`~/Library/Caches/hiddenink` on a Mac), keyed by a SHA-256 fingerprint of the file. The cache holds findings only, never the document's text.
 - **Safety limits.** Each scan runs in a separate process with a time limit. Files up to 2 GB are accepted.
 
-The guard covers the normal ways Claude Code opens these files. It is a safety net, not a guarantee.
+## What the guard does not cover
+
+The guard is a safety net, not a guarantee. It watches the two ways Claude Code usually opens documents: the Read and Bash tools. It expands wildcards such as `*.pdf` and checks up to 5 documents per command. When it cannot check something (a damaged file, a scan that runs out of time, a file name only known when the command runs, or more than 5 documents), it does not let the action through quietly: Claude Code will ask you to approve it.
+
+It does not see documents that reach Claude another way:
+
+- files read through other MCP servers' tools, notebooks, or images of documents;
+- PDFs fetched from the web;
+- documents renamed so they no longer end in .docx or .pdf.
+
+For those, run `/hidden-ink:scan <file>` yourself, or scan the file at [hiddenink.io](https://hiddenink.io) first.
 
 ## Legal
 

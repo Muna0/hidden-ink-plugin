@@ -58,7 +58,8 @@ def call_tool(name: str, arguments: dict) -> dict:
     if not isinstance(path, str) or not path:
         return _result("Give the path of a .docx or .pdf file.", True)
     try:
-        run = subprocess.run(_engine(["tool", name, path]), capture_output=True, text=True,
+        # "--": a path that starts with "-" is never read as an option
+        run = subprocess.run(_engine(["tool", name, "--", path]), capture_output=True, text=True,
                              stdin=subprocess.DEVNULL, timeout=CALL_TIMEOUT)
     except (OSError, subprocess.TimeoutExpired):
         return _result("Hidden Ink could not run. If uv is not installed: curl -LsSf https://astral.sh/uv/install.sh | sh", True)
@@ -72,6 +73,8 @@ def handle(message: dict) -> dict | None:
     if "id" not in message:
         return None  # a notification, such as notifications/initialized
     method, params = message.get("method"), message.get("params") or {}
+    if not isinstance(params, dict):
+        return {"jsonrpc": "2.0", "id": message["id"], "error": {"code": -32602, "message": "Invalid params"}}
     if method == "initialize":
         result = {"protocolVersion": params.get("protocolVersion", "2025-06-18"),
                   "capabilities": {"tools": {"listChanged": False}},
@@ -82,7 +85,8 @@ def handle(message: dict) -> dict | None:
     elif method == "tools/list":
         result = {"tools": TOOLS}
     elif method == "tools/call":
-        result = call_tool(params.get("name", ""), params.get("arguments") or {})
+        arguments = params.get("arguments") or {}
+        result = call_tool(str(params.get("name", "")), arguments if isinstance(arguments, dict) else {})
     else:
         return {"jsonrpc": "2.0", "id": message["id"], "error": {"code": -32601, "message": f"Unknown method: {method}"}}
     return {"jsonrpc": "2.0", "id": message["id"], "result": result}

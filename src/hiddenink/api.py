@@ -4,6 +4,8 @@ from __future__ import annotations
 import os
 import shutil
 import threading
+import time
+from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -36,7 +38,13 @@ GONE = "This scan has expired or does not exist. Scan the file again."
 UNEXPECTED = "Something went wrong on our side. Try again."
 DISK_STEM = "document"
 STATUS = {UnsupportedFormat: 415, UnsafeFile: 413, ScanTimeout: 422}
+SCANS_PER_WINDOW = 30  # per visitor, so one person cannot hold the scanner for everyone else
+WINDOW_SECONDS = 600
+MIN_FREE_BYTES = 1536 * 1024 * 1024  # stop accepting scans before uploads can fill the disk
+BUSY = "Hidden Ink is busy right now. Try again in a few minutes."
 SECURITY_HEADERS = {
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
     "Content-Security-Policy": ("default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; "
                                 "frame-ancestors 'none'; base-uri 'none'; form-action 'none'"),
     "X-Content-Type-Options": "nosniff",
@@ -109,8 +117,30 @@ def create_app(store: JobStore | None = None, static_dir: Path | None = STATIC_D
     app.state.max_upload_bytes = _max_upload(hosted)
     app.state.big_gate = big_gate
 
+    recent: dict[str, deque] = defaultdict(deque)
+    recent_lock = threading.Lock()
+
+    def over_limit(visitor: str) -> bool:
+        now = time.monotonic()
+        with recent_lock:
+            q = recent[visitor]
+            while q and now - q[0] > WINDOW_SECONDS:
+                q.popleft()
+            if len(q) >= SCANS_PER_WINDOW:
+                return True
+            q.append(now)
+            return False
+
     @app.middleware("http")
     async def guard(request: Request, call_next):
+        is_scan = request.method == "POST" and (request.url.path == "/api/scans" or request.url.path.startswith("/api/samples/"))
+        if is_scan:
+            # Fly's proxy sets Fly-Client-IP itself, so a visitor cannot pick their own
+            visitor = request.headers.get("fly-client-ip") or (request.client.host if request.client else "unknown")
+            if over_limit(visitor):
+                return _error(429, "Too many scans from your connection. Wait a few minutes and try again.")
+            if shutil.disk_usage(store.root).free < MIN_FREE_BYTES:
+                return _error(503, BUSY)
         if request.method == "POST" and request.url.path == "/api/scans":
             length = request.headers.get("content-length", "")
             if not length.isdigit():

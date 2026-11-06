@@ -9,7 +9,8 @@ Before Claude reads a Word or PDF file, this skill has Claude run a short check 
 In Claude Code:
 
 ```
-/plugin install hidden-ink-check --marketplace Muna0/hidden-ink-plugin
+/plugin marketplace add Muna0/hidden-ink-plugin
+/plugin install hidden-ink-check@hidden-ink
 ```
 
 It also works in Claude apps that support skills, where Claude runs the check in its own sandbox on files you upload.

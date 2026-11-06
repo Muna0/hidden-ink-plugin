@@ -73,6 +73,10 @@ It does not see documents that reach Claude another way:
 
 For those, run `/hidden-ink:scan <file>` yourself, or scan the file at [hiddenink.io](https://hiddenink.io) first.
 
+## Privacy
+
+Hidden Ink runs on your computer and makes no network calls; your documents are never sent to Hidden Ink. Scan findings are cached on your computer for up to 30 days. Read the full [privacy policy](https://hiddenink.io/privacy/). Help: [hiddenink.io/support](https://hiddenink.io/support/).
+
 ## Legal
 
 Hidden Ink reports hidden content found by automated analysis. It is not legal advice. Hidden Ink is not affiliated with Anthropic.
